@@ -537,7 +537,7 @@ const Board = () => {
       <div className={`${isWhiteTurn ? "rotate-white" : "rotate-black"}`}>
         {rows.map((row) => (
           <div key={row.rowId} className="row-container">
-            <div className={`${isWhiteTurn ? "rotate-white" : "rotate-black"}`}>
+            <div className={`${isWhiteTurn ? "rotate-white" : "rotate-black"} row-span`}>
               R {row.rowId}
             </div>
             <Row
