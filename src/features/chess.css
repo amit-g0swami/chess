@@ -1,0 +1,83 @@
+.board {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.row-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.square {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: 1px solid gray;
+}
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.black-square {
+    background-color: green
+}
+
+.white-square {
+    background-color: #eee
+}
+
+.piece {
+    color: red;
+    cursor: pointer;
+}
+
+.white-piece {
+    color: red;
+}
+
+.black-piece {
+    color: black;
+}
+
+.piece-span {
+    font-size: 50px;
+}
+
+.color-red {
+    color: red;
+    font-size: 50px;
+}
+
+.hidden {
+    display: none;
+}
+
+.renderturn-container {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.rotate-white {
+    transform: rotate(180deg);
+    transition-duration: 0.5s;
+}
+
+.rotate-black {
+    transition-duration: 0.5s;
+}
