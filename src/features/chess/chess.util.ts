@@ -1,10 +1,26 @@
 import {
   COLOR,
+  IBoardState,
   IDetailsForOnDrop,
   IHandlePieceDrop,
   IHandleValidateTurn,
+  IUpdateDraggedPiece,
   SameSqaureProps,
 } from "./chess.interface";
+
+const capturedPieces = (boardState: IBoardState[]) => {
+  const capturedBlackPieces = [];
+  const totalCapturedBlackPieces = capturedBlackPieces.length;
+  const capturedWhitePieces = [];
+  const totalCapturedWhitePieces = capturedWhitePieces.length;
+
+  return {
+    totalCapturedBlackPieces,
+    capturedBlackPieces,
+    totalCapturedWhitePieces,
+    capturedWhitePieces,
+  };
+};
 
 const onDroppedSquareDetail = ({
   rowId,
@@ -26,6 +42,31 @@ const onDroppedSquareDetail = ({
   };
 };
 
+const isTheirAPieceOnDropSquare = ({
+  rowId,
+  columnId,
+  boardState,
+}: IDetailsForOnDrop) => {
+  const findPiece = boardState.find(
+    (piece) => piece.row === rowId && piece.column === columnId
+  );
+
+  return !!findPiece;
+};
+
+const updateDraggedPiece = ({
+  state,
+  draggedRow,
+  draggedColumn,
+  dropRow,
+  dropColumn,
+}: IUpdateDraggedPiece) =>
+  state.map((piece) =>
+    piece.row === draggedRow && piece.column === draggedColumn
+      ? { ...piece, row: dropRow, column: dropColumn }
+      : piece
+  );
+
 const handlePieceDrop = ({
   draggedData,
   onDropPayload,
@@ -34,15 +75,35 @@ const handlePieceDrop = ({
   const { row: draggedRow, column: draggedColumn } = draggedData;
   const { row: dropRow, column: dropColumn } = onDropPayload;
 
-  const updatedBoardState = boardState.map((piece) => {
-    if (piece.row === draggedRow && piece.column === draggedColumn) {
-      piece.row = dropRow;
-      piece.column = dropColumn;
-    }
-    return piece;
+  // Check if there's a piece on the drop square
+  const isPieceOnDropSquare = isTheirAPieceOnDropSquare({
+    rowId: dropRow,
+    columnId: dropColumn,
+    boardState,
   });
 
-  return updatedBoardState;
+  if (isPieceOnDropSquare) {
+    // Remove the piece on the drop square and update the dragged piece's position
+    const boardStateWithoutDropPiece = boardState.filter(
+      (piece) => piece.row !== dropRow || piece.column !== dropColumn
+    );
+    return updateDraggedPiece({
+      state: boardStateWithoutDropPiece,
+      draggedRow,
+      draggedColumn,
+      dropRow,
+      dropColumn,
+    });
+  }
+
+  // If no piece is on the drop square, just update the dragged piece's position
+  return updateDraggedPiece({
+    state: boardState,
+    draggedRow,
+    draggedColumn,
+    dropRow,
+    dropColumn,
+  });
 };
 
 const handleValidateTurn = ({
@@ -87,8 +148,10 @@ const isValidMove = ({
 
 const chessUtil = {
   onDroppedSquareDetail,
-  handlePieceDrop,
+  updateDraggedPiece,
   handleValidateTurn,
+  handlePieceDrop,
+  capturedPieces,
   isValidMove,
 };
 

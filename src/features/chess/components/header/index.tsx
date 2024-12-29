@@ -3,6 +3,27 @@ interface IRenderTurnProps {
 }
 
 export const RenderTurn = ({ isWhiteTurn }: IRenderTurnProps) => {
-  const turn = isWhiteTurn ? "White" : "Black";
-  return <div className="renderTurn-container">Turn: {turn}</div>;
+  return (
+    <div className="renderTurn-container">
+      Current Turn
+      <div className="turn-container">
+        <input
+          type="radio"
+          id="white"
+          name="turn"
+          value="white"
+          checked={isWhiteTurn}
+        />
+        <label htmlFor="white">White</label>
+        <input
+          type="radio"
+          id="black"
+          name="turn"
+          value="black"
+          checked={!isWhiteTurn}
+        />
+        <label htmlFor="black">Black</label>
+      </div>
+    </div>
+  );
 };

@@ -1,4 +1,5 @@
 import useChessStore from "../../store/chess.store";
+import { CapturedPieces } from "../captured-pieces";
 import { RenderTurn } from "../header";
 import { Row } from "../row";
 
@@ -8,7 +9,10 @@ export const Board = () => {
 
   return (
     <div className="board">
-      <RenderTurn isWhiteTurn={isWhiteTurn} />
+      <div className="board-container">
+        <RenderTurn isWhiteTurn={isWhiteTurn} />
+        <CapturedPieces boardState={boardState} />
+      </div>
       <div className={`${isWhiteTurn ? "rotate-white" : "rotate-black"}`}>
         {rows.map((row) => (
           <div key={row.rowId} className="row-container">

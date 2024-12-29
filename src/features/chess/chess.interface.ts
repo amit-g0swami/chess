@@ -51,4 +51,12 @@ export interface IHandleValidateTurn {
   isWhiteTurn: boolean;
 }
 
+export interface IUpdateDraggedPiece {
+  state: IBoardState[];
+  draggedRow: number;
+  draggedColumn: number;
+  dropRow: number;
+  dropColumn: number;
+}
+
 export type SameSqaureProps = Omit<IHandlePieceDrop, "boardState">;
