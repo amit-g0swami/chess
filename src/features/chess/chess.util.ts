@@ -6,7 +6,7 @@ import {
   SameSqaureProps,
 } from "./chess.interface";
 
-export const onDroppedSquareDetail = ({
+const onDroppedSquareDetail = ({
   rowId,
   columnId,
   boardState,
@@ -26,45 +26,7 @@ export const onDroppedSquareDetail = ({
   };
 };
 
-export const handleValidateTurn = ({
-  draggedData,
-  isWhiteTurn,
-}: IHandleValidateTurn) => {
-  switch (draggedData.color) {
-    case COLOR.WHITE:
-      return isWhiteTurn;
-    case COLOR.BLACK:
-      return !isWhiteTurn;
-    default:
-      return false;
-  }
-};
-
-export const droppedSquareSameAsDraggedSquare = ({
-  draggedData,
-  onDropPayload,
-}: SameSqaureProps) => {
-  const { row: draggedRow, column: draggedColumn } = draggedData;
-  const { row: dropRow, column: dropColumn } = onDropPayload;
-  const isSameSquare = draggedRow === dropRow && draggedColumn === dropColumn;
-  return isSameSquare;
-};
-
-export const isValidMove = ({
-  draggedData,
-  onDropPayload,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  boardState,
-}: IHandlePieceDrop) => {
-  // check if the dropped piece is not the same as the dragged piece
-  if (droppedSquareSameAsDraggedSquare({ draggedData, onDropPayload })) {
-    return false;
-  }
-
-  return true;
-};
-
-export const handlePieceDrop = ({
+const handlePieceDrop = ({
   draggedData,
   onDropPayload,
   boardState,
@@ -82,3 +44,52 @@ export const handlePieceDrop = ({
 
   return updatedBoardState;
 };
+
+const handleValidateTurn = ({
+  draggedData,
+  isWhiteTurn,
+}: IHandleValidateTurn) => {
+  switch (draggedData.color) {
+    case COLOR.WHITE:
+      return isWhiteTurn;
+    case COLOR.BLACK:
+      return !isWhiteTurn;
+    default:
+      return false;
+  }
+};
+
+// MOVE VALIDATION FUNCTIONS
+
+const droppedSquareSameAsDraggedSquare = ({
+  draggedData,
+  onDropPayload,
+}: SameSqaureProps) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+  const isSameSquare = draggedRow === dropRow && draggedColumn === dropColumn;
+  return isSameSquare;
+};
+
+const isValidMove = ({
+  draggedData,
+  onDropPayload,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  boardState,
+}: IHandlePieceDrop) => {
+  // check if the dropped piece is not the same as the dragged piece
+  if (droppedSquareSameAsDraggedSquare({ draggedData, onDropPayload })) {
+    return false;
+  }
+
+  return true;
+};
+
+const chessUtil = {
+  onDroppedSquareDetail,
+  handlePieceDrop,
+  handleValidateTurn,
+  isValidMove,
+};
+
+export default chessUtil;

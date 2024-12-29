@@ -1,6 +1,6 @@
+import chessUtil from "../../chess.util";
 import { SETDATA_KEY } from "../../chess.const";
 import { COLOR, IBoardState } from "../../chess.interface";
-import { handlePieceDrop, handleValidateTurn, isValidMove, onDroppedSquareDetail } from "../../chess.util";
 import { Piece } from "../piece";
 
 interface ISquareProps {
@@ -33,7 +33,7 @@ export const Square = ({
       pieceType: piece.type,
     };
 
-    const isTurnValid = handleValidateTurn({
+    const isTurnValid = chessUtil.handleValidateTurn({
       draggedData: piece,
       isWhiteTurn,
     });
@@ -55,7 +55,7 @@ export const Square = ({
     const getData = e.dataTransfer.getData(SETDATA_KEY);
     const draggedData = JSON.parse(getData);
 
-    const { pieceType, color } = onDroppedSquareDetail({
+    const { pieceType, color } = chessUtil.onDroppedSquareDetail({
       rowId,
       columnId,
       boardState,
@@ -68,7 +68,7 @@ export const Square = ({
       pieceType: pieceType,
     };
 
-    const isValid = isValidMove({
+    const isValid = chessUtil.isValidMove({
       draggedData,
       onDropPayload,
       boardState,
@@ -78,7 +78,7 @@ export const Square = ({
       return;
     }
 
-    const updatedBoardState = handlePieceDrop({
+    const updatedBoardState = chessUtil.handlePieceDrop({
       draggedData,
       onDropPayload,
       boardState,
