@@ -1,23 +1,10 @@
-import React from "react";
-import {
-  BOARD_LENGTH,
-  IBoardState,
-  INITIAL_BOARD_STATE,
-} from "../../chess.interface";
+import useChessStore from "../../store/chess.store";
 import { RenderTurn } from "../header";
 import { Row } from "../row";
 
 export const Board = () => {
-  const [boardState, setBoardState] =
-    React.useState<IBoardState[]>(INITIAL_BOARD_STATE);
-  const [isWhiteTurn, setIsWhiteTurn] = React.useState<boolean>(true);
-
-  const rows = Array.from({ length: BOARD_LENGTH }, (_, i) => {
-    const rowId = i + 1;
-    return {
-      rowId: rowId,
-    };
-  });
+  const { rows, boardState, isWhiteTurn, setIsWhiteTurn, setBoardState } =
+    useChessStore();
 
   return (
     <div className="board">

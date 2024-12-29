@@ -1,5 +1,14 @@
-import { BOARD_LENGTH, COLOR, IRowProps } from "../../chess.interface";
+import { BOARD_LENGTH } from "../../chess.const";
+import { COLOR, IBoardState } from "../../chess.interface";
 import { Square } from "../square";
+
+interface IRowProps {
+  rowId: number;
+  boardState: IBoardState[];
+  isWhiteTurn: boolean;
+  setBoardState: (boardState: IBoardState[]) => void;
+  setIsWhiteTurn: (isWhiteTurn: boolean) => void;
+}
 
 export const Row = ({
   rowId,

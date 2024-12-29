@@ -1,91 +1,17 @@
-import {
-  COLOR,
-  IBoardState,
-  IdetailsForOnDrop,
-  IhandlePieceDrop,
-  IhandleValidateTurn,
-  ISquareProps,
-  SameSqaureProps,
-  SETDATA_KEY,
-} from "../../chess.interface";
+import { SETDATA_KEY } from "../../chess.const";
+import { COLOR, IBoardState } from "../../chess.interface";
+import { handlePieceDrop, handleValidateTurn, isValidMove, onDroppedSquareDetail } from "../../chess.util";
 import { Piece } from "../piece";
 
-const onDroppedSquareDetail = ({
-  rowId,
-  columnId,
-  boardState,
-}: IdetailsForOnDrop) => {
-  const findPiece = boardState.find(
-    (piece) => piece.row === rowId && piece.column === columnId
-  );
-
-  if (findPiece) {
-    const { type, color } = findPiece;
-    return { pieceType: type, color };
-  }
-
-  return {
-    pieceType: null,
-    color: null,
-  };
-};
-
-const handleValidateTurn = ({
-  draggedData,
-  isWhiteTurn,
-}: IhandleValidateTurn) => {
-  switch (draggedData.color) {
-    case COLOR.WHITE:
-      return isWhiteTurn;
-    case COLOR.BLACK:
-      return !isWhiteTurn;
-    default:
-      return false;
-  }
-};
-
-const droppedSquareSameAsDraggedSquare = ({
-  draggedData,
-  onDropPayload,
-}: SameSqaureProps) => {
-  const { row: draggedRow, column: draggedColumn } = draggedData;
-  const { row: dropRow, column: dropColumn } = onDropPayload;
-  const isSameSquare = draggedRow === dropRow && draggedColumn === dropColumn;
-  return isSameSquare;
-};
-
-const isValidMove = ({
-  draggedData,
-  onDropPayload,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  boardState,
-}: IhandlePieceDrop) => {
-  // check if the dropped piece is not the same as the dragged piece
-  if (droppedSquareSameAsDraggedSquare({ draggedData, onDropPayload })) {
-    return false;
-  }
-
-  return true;
-};
-
-const handlePieceDrop = ({
-  draggedData,
-  onDropPayload,
-  boardState,
-}: IhandlePieceDrop) => {
-  const { row: draggedRow, column: draggedColumn } = draggedData;
-  const { row: dropRow, column: dropColumn } = onDropPayload;
-
-  const updatedBoardState = boardState.map((piece) => {
-    if (piece.row === draggedRow && piece.column === draggedColumn) {
-      piece.row = dropRow;
-      piece.column = dropColumn;
-    }
-    return piece;
-  });
-
-  return updatedBoardState;
-};
+interface ISquareProps {
+  squareType: COLOR;
+  columnId: number;
+  rowId: number;
+  boardState: IBoardState[];
+  isWhiteTurn: boolean;
+  setBoardState: (boardState: IBoardState[]) => void;
+  setIsWhiteTurn: (isWhiteTurn: boolean) => void;
+}
 
 export const Square = ({
   squareType,
