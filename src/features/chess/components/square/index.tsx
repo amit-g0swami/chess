@@ -1,5 +1,5 @@
 import chessUtil from "../../chess.util";
-import { SETDATA_KEY } from "../../chess.const";
+import { SETDATA_KEY } from "../../chess.const.ts";
 import { COLOR, IBoardState } from "../../chess.interface";
 import { Piece } from "../piece";
 

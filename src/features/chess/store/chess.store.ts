@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { IBoardState, IRow } from "../chess.interface";
-import { INITIAL_BOARD_STATE, ROWS } from "../chess.const";
+import { INITIAL_BOARD_STATE, ROWS } from "../chess.const.ts";
 
 type ChessManagementState = {
   boardState: IBoardState[];

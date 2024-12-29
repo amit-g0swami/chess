@@ -1,4 +1,4 @@
-import { PIECE_MAPPER } from "../../chess.const";
+import { PIECE_MAPPER } from "../../chess.const.ts";
 import { PIECE_TYPE } from "../../chess.interface";
 
 interface IPieceProps {

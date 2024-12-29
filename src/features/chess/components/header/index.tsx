@@ -4,5 +4,5 @@ interface IRenderTurnProps {
 
 export const RenderTurn = ({ isWhiteTurn }: IRenderTurnProps) => {
   const turn = isWhiteTurn ? "White" : "Black";
-  return <div className="renderturn-container">Turn: {turn}</div>;
+  return <div className="renderTurn-container">Turn: {turn}</div>;
 };

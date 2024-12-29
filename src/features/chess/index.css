@@ -1,11 +1,12 @@
 .board {
-    height: 100vh;
-    width: 100vw;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
+    height: 100vh;
+    gap: 20px;
 }
+
 
 .row-container {
     display: flex;
@@ -19,12 +20,11 @@
 }
 
 .square {
-    width: 80px;
-    height: 80px;
+    min-width: 80px;
+    min-height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: 1px solid gray;
 }
 
 .column-container {
@@ -35,42 +35,50 @@
 }
 
 .black-square {
-    background-color: green
+    background-color: #739552
 }
 
 .white-square {
-    background-color: #eee
+    background-color: #ebecd0
 }
 
 .piece {
-    color: red;
     cursor: pointer;
-}
-
-.white-piece {
-    color: red;
-}
-
-.black-piece {
-    color: black;
+    backdrop-filter: blur(5px) brightness(0.9);
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .piece-span {
-    font-size: 50px;
+    font-size: 80px;
+}
+
+.white-piece {
+    color: #f9f9f9;
+}
+
+.black-piece {
+    color: #474543;
 }
 
 .color-red {
-    color: red;
     font-size: 50px;
+    color: red;
 }
 
 .hidden {
     display: none;
 }
 
-.renderturn-container {
-    font-size: 20px;
-    margin-bottom: 10px;
+.renderTurn-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-size: 18px;
+    height: 673px;
 }
 
 .rotate-white {
@@ -83,5 +91,9 @@
 }
 
 .row-span {
-    font-size: 20px;
+    font-size: 18px;
+}
+
+.column-span {
+    font-size: 18px;
 }

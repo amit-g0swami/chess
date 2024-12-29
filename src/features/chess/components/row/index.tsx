@@ -1,4 +1,4 @@
-import { BOARD_LENGTH } from "../../chess.const";
+import { BOARD_LENGTH } from "../../chess.const.ts";
 import { COLOR, IBoardState } from "../../chess.interface";
 import { Square } from "../square";
 
@@ -31,7 +31,7 @@ export const Row = ({
       {columns.map((column) => (
         <div className="column-container" key={column.columnId}>
           {rowId === 1 && (
-            <div className={`${isWhiteTurn ? "rotate-white" : "rotate-black"}`}>
+            <div className={`column-span ${isWhiteTurn ? "rotate-white" : "rotate-black"}`}>
               C {column.columnId}
             </div>
           )}
