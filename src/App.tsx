@@ -1,4 +1,4 @@
-import { Chess } from "./features/chess";
+import { Chess } from "./features";
 
 function App() {
   return <Chess />;
