@@ -59,4 +59,4 @@ export interface IUpdateDraggedPiece {
   dropColumn: number;
 }
 
-export type SameSqaureProps = Omit<IHandlePieceDrop, "boardState">;
+export type ValidateMoveProps = Omit<IHandlePieceDrop, "boardState">;

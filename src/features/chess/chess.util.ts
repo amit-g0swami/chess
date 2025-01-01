@@ -6,7 +6,7 @@ import {
   IHandleValidateTurn,
   IUpdateDraggedPiece,
   PIECE_TYPE,
-  SameSqaureProps,
+  ValidateMoveProps,
 } from "./chess.interface";
 
 const capturedPieces = (boardState: IBoardState[]) => {
@@ -123,14 +123,24 @@ const handleValidateTurn = ({
 
 // MOVE VALIDATION FUNCTIONS
 
-const droppedSquareSameAsDraggedSquare = ({
+const isDroppedSquareSameAsDraggedSquare = ({
   draggedData,
   onDropPayload,
-}: SameSqaureProps) => {
+}: ValidateMoveProps) => {
   const { row: draggedRow, column: draggedColumn } = draggedData;
   const { row: dropRow, column: dropColumn } = onDropPayload;
   const isSameSquare = draggedRow === dropRow && draggedColumn === dropColumn;
   return isSameSquare;
+};
+
+const isDroppedSquareTypeSameAsDraggedSquare = ({
+  draggedData,
+  onDropPayload,
+}: ValidateMoveProps) => {
+  const { type: draggedPieceType } = draggedData;
+  const { pieceType: droppedPieceType } = onDropPayload;
+  const isSamePieceType = draggedPieceType === droppedPieceType;
+  return isSamePieceType;
 };
 
 const isPawnMoveValid = ({
@@ -187,12 +197,22 @@ const isValidMove = ({
   boardState,
 }: IHandlePieceDrop) => {
   // check if the dropped piece is not the same as the dragged piece
-  const isDropSquareSameAsDraggedSquare = droppedSquareSameAsDraggedSquare({
+  const isDropSquareSameAsDraggedSquare = isDroppedSquareSameAsDraggedSquare({
     draggedData,
     onDropPayload,
   });
 
-  if (isDropSquareSameAsDraggedSquare) return false;
+  const isDroppedSquarePieceTypeSameAsDraggedSquare =
+    isDroppedSquareTypeSameAsDraggedSquare({
+      draggedData,
+      onDropPayload,
+    });
+
+  const isNotAValidMove =
+    isDropSquareSameAsDraggedSquare ||
+    isDroppedSquarePieceTypeSameAsDraggedSquare;
+
+  if (isNotAValidMove) return false;
 
   const { type } = draggedData;
 
