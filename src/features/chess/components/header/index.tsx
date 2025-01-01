@@ -13,6 +13,7 @@ export const RenderTurn = ({ isWhiteTurn }: IRenderTurnProps) => {
           name="turn"
           value="white"
           checked={isWhiteTurn}
+          readOnly
         />
         <label htmlFor="white">White</label>
         <input
@@ -21,6 +22,7 @@ export const RenderTurn = ({ isWhiteTurn }: IRenderTurnProps) => {
           name="turn"
           value="black"
           checked={!isWhiteTurn}
+          readOnly
         />
         <label htmlFor="black">Black</label>
       </div>

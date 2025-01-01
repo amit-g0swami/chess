@@ -26,11 +26,11 @@ export const Square = ({
     e: React.DragEvent<HTMLDivElement>,
     piece: IBoardState
   ) => {
-    const draggedPayload = {
+    const draggedPayload: IBoardState = {
       row: piece.row,
       column: piece.column,
       color: piece.color,
-      pieceType: piece.type,
+      type: piece.type,
     };
 
     const isTurnValid = chessUtil.handleValidateTurn({
@@ -53,7 +53,7 @@ export const Square = ({
   const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const getData = e.dataTransfer.getData(SETDATA_KEY);
-    const draggedData = JSON.parse(getData);
+    const draggedData: IBoardState = JSON.parse(getData);
 
     const { pieceType, color } = chessUtil.onDroppedSquareDetail({
       rowId,
@@ -74,9 +74,7 @@ export const Square = ({
       boardState,
     });
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     const updatedBoardState = chessUtil.handlePieceDrop({
       draggedData,

@@ -5,6 +5,7 @@ import {
   IHandlePieceDrop,
   IHandleValidateTurn,
   IUpdateDraggedPiece,
+  PIECE_TYPE,
   SameSqaureProps,
 } from "./chess.interface";
 
@@ -132,18 +133,106 @@ const droppedSquareSameAsDraggedSquare = ({
   return isSameSquare;
 };
 
+const isPawnMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
+const isRookMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
+const isKnightMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
+const isBishopMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
+const isQueenMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
+const isKingMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  return true;
+};
+
 const isValidMove = ({
   draggedData,
   onDropPayload,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   boardState,
 }: IHandlePieceDrop) => {
   // check if the dropped piece is not the same as the dragged piece
-  if (droppedSquareSameAsDraggedSquare({ draggedData, onDropPayload })) {
-    return false;
-  }
+  const isDropSquareSameAsDraggedSquare = droppedSquareSameAsDraggedSquare({
+    draggedData,
+    onDropPayload,
+  });
 
-  return true;
+  if (isDropSquareSameAsDraggedSquare) return false;
+
+  const { type } = draggedData;
+
+  // Validations for each piece type
+  switch (type) {
+    case PIECE_TYPE.PAWN:
+      return isPawnMoveValid({ draggedData, onDropPayload, boardState });
+    case PIECE_TYPE.ROOK:
+      return isRookMoveValid({
+        draggedData,
+        onDropPayload,
+        boardState,
+      });
+    case PIECE_TYPE.KNIGHT:
+      return isKnightMoveValid({
+        draggedData,
+        onDropPayload,
+        boardState,
+      });
+    case PIECE_TYPE.BISHOP:
+      return isBishopMoveValid({
+        draggedData,
+        onDropPayload,
+        boardState,
+      });
+    case PIECE_TYPE.QUEEN:
+      return isQueenMoveValid({
+        draggedData,
+        onDropPayload,
+        boardState,
+      });
+    case PIECE_TYPE.KING:
+      return isKingMoveValid({
+        draggedData,
+        onDropPayload,
+        boardState,
+      });
+    default:
+      return false;
+  }
 };
 
 const chessUtil = {
