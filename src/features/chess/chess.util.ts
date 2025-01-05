@@ -183,41 +183,7 @@ const isPawnMoveValid = ({
   return false;
 };
 
-const isRookMoveValid = ({
-  draggedData,
-  onDropPayload,
-  boardState,
-}: IHandlePieceDrop) => {
-  const { row: draggedRow, column: draggedColumn } = draggedData;
-  const { row: dropRow, column: dropColumn } = onDropPayload;
-
-  const isSameRow = draggedRow === dropRow;
-  const isSameColumn = draggedColumn === dropColumn;
-
-  if (isSameRow || isSameColumn) {
-    return true;
-  }
-
-  return false;
-};
-
-const isKnightMoveValid = ({
-  draggedData,
-  onDropPayload,
-}: IHandlePieceDrop) => {
-  const { row: draggedRow, column: draggedColumn } = draggedData;
-  const { row: dropRow, column: dropColumn } = onDropPayload;
-
-  const rowDiff = Math.abs(draggedRow - dropRow);
-  const columnDiff = Math.abs(draggedColumn - dropColumn);
-
-  // Knight moves in an "L" shape
-  return (
-    (rowDiff === 2 && columnDiff === 1) || (rowDiff === 1 && columnDiff === 2)
-  );
-};
-
-const isBishopMoveValid = ({
+const isBishopMoveBlocked = ({
   draggedData,
   onDropPayload,
   boardState,
@@ -243,12 +209,115 @@ const isBishopMoveValid = ({
           (piece) => piece.row === currentRow && piece.column === currentColumn
         )
       ) {
-        return false; // Path is blocked
+        return true; // Path is blocked
       }
       currentRow += rowStep;
       currentColumn += columnStep;
     }
-    return true;
+    return false;
+  }
+
+  return false;
+};
+
+const isRookMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const isSameRow = draggedRow === dropRow;
+  const isSameColumn = draggedColumn === dropColumn;
+
+  if (isSameRow || isSameColumn) {
+    return !isRookMoveBlocked({ draggedData, onDropPayload, boardState });
+  }
+
+  return false;
+};
+
+const isKnightMoveValid = ({
+  draggedData,
+  onDropPayload,
+}: IHandlePieceDrop) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const rowDiff = Math.abs(draggedRow - dropRow);
+  const columnDiff = Math.abs(draggedColumn - dropColumn);
+
+  // Knight moves in an "L" shape
+  return (
+    (rowDiff === 2 && columnDiff === 1) || (rowDiff === 1 && columnDiff === 2)
+  );
+};
+
+const isRookMoveBlocked = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const isSameRow = draggedRow === dropRow;
+  const isSameColumn = draggedColumn === dropColumn;
+
+  if (isSameRow) {
+    const columnStep = draggedColumn < dropColumn ? 1 : -1;
+
+    let currentColumn = draggedColumn + columnStep;
+
+    while (currentColumn !== dropColumn) {
+      if (
+        boardState.some(
+          (piece) => piece.row === draggedRow && piece.column === currentColumn
+        )
+      ) {
+        return true; // Path is blocked
+      }
+      currentColumn += columnStep;
+    }
+    return false;
+  }
+
+  if (isSameColumn) {
+    const rowStep = draggedRow < dropRow ? 1 : -1;
+
+    let currentRow = draggedRow + rowStep;
+
+    while (currentRow !== dropRow) {
+      if (
+        boardState.some(
+          (piece) => piece.row === currentRow && piece.column === draggedColumn
+        )
+      ) {
+        return true; // Path is blocked
+      }
+      currentRow += rowStep;
+    }
+    return false;
+  }
+
+  return false;
+};
+
+const isBishopMoveValid = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const rowDiff = Math.abs(draggedRow - dropRow);
+  const columnDiff = Math.abs(draggedColumn - dropColumn);
+
+  // Check for diagonal move
+  if (rowDiff === columnDiff) {
+    return !isBishopMoveBlocked({ draggedData, onDropPayload, boardState });
   }
 
   return false;
