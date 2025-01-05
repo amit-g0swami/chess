@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { INITIAL_BOARD_STATE } from "./chess.const";
 import {
   COLOR,
@@ -162,7 +163,24 @@ const isPawnMoveValid = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const isSameColumn = draggedColumn === dropColumn;
+
+  const isWhitePawnMove = draggedData.color === COLOR.WHITE;
+  const isBlackPawnMove = draggedData.color === COLOR.BLACK;
+
+  const isWhitePawnMoveValid =
+    isWhitePawnMove && dropRow === draggedRow + 1 && isSameColumn;
+  const isBlackPawnMoveValid =
+    isBlackPawnMove && dropRow === draggedRow - 1 && isSameColumn;
+
+  if (isWhitePawnMoveValid || isBlackPawnMoveValid) {
+    return true;
+  }
+
+  return false;
 };
 
 const isRookMoveValid = ({
@@ -170,15 +188,33 @@ const isRookMoveValid = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const isSameRow = draggedRow === dropRow;
+  const isSameColumn = draggedColumn === dropColumn;
+
+  if (isSameRow || isSameColumn) {
+    return true;
+  }
+
+  return false;
 };
 
 const isKnightMoveValid = ({
   draggedData,
   onDropPayload,
-  boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const rowDiff = Math.abs(draggedRow - dropRow);
+  const columnDiff = Math.abs(draggedColumn - dropColumn);
+
+  // Knight moves in an "L" shape
+  return (
+    (rowDiff === 2 && columnDiff === 1) || (rowDiff === 1 && columnDiff === 2)
+  );
 };
 
 const isBishopMoveValid = ({
@@ -186,7 +222,36 @@ const isBishopMoveValid = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const rowDiff = Math.abs(draggedRow - dropRow);
+  const columnDiff = Math.abs(draggedColumn - dropColumn);
+
+  // Check for diagonal move
+  if (rowDiff === columnDiff) {
+    const rowStep = draggedRow < dropRow ? 1 : -1;
+    const columnStep = draggedColumn < dropColumn ? 1 : -1;
+
+    // Check for blocking pieces
+    let currentRow = draggedRow + rowStep;
+    let currentColumn = draggedColumn + columnStep;
+
+    while (currentRow !== dropRow && currentColumn !== dropColumn) {
+      if (
+        boardState.some(
+          (piece) => piece.row === currentRow && piece.column === currentColumn
+        )
+      ) {
+        return false; // Path is blocked
+      }
+      currentRow += rowStep;
+      currentColumn += columnStep;
+    }
+    return true;
+  }
+
+  return false;
 };
 
 const isQueenMoveValid = ({
@@ -194,7 +259,11 @@ const isQueenMoveValid = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  // Queen's move combines Rook and Bishop
+  return (
+    isRookMoveValid({ draggedData, onDropPayload, boardState }) ||
+    isBishopMoveValid({ draggedData, onDropPayload, boardState })
+  );
 };
 
 const isKingMoveValid = ({
@@ -202,7 +271,25 @@ const isKingMoveValid = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
-  return true;
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  const isSameRow = draggedRow === dropRow;
+  const isSameColumn = draggedColumn === dropColumn;
+
+  const isSameDiagonal =
+    Math.abs(draggedRow - dropRow) === Math.abs(draggedColumn - dropColumn) &&
+    Math.abs(draggedRow - dropRow) <= 1;
+
+  if (isSameRow || isSameColumn || isSameDiagonal) {
+    return true;
+  }
+
+  return false;
+};
+
+const isWithinBoardBounds = (row: number, column: number) => {
+  return row >= 0 && row < 8 && column >= 0 && column < 8;
 };
 
 const isValidMove = ({
@@ -210,6 +297,10 @@ const isValidMove = ({
   onDropPayload,
   boardState,
 }: IHandlePieceDrop) => {
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  if (!isWithinBoardBounds(dropRow, dropColumn)) return false;
+
   // check if the dropped piece is not the same as the dragged piece
   const isDropSquareSameAsDraggedSquare = isDroppedSquareSameAsDraggedSquare({
     draggedData,
