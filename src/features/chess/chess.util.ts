@@ -167,20 +167,23 @@ const isPawnMoveValid = ({
   const { row: dropRow, column: dropColumn } = onDropPayload;
 
   const isSameColumn = draggedColumn === dropColumn;
+  const isMovingForward = isPawnMovingForward(
+    draggedData.color,
+    draggedRow,
+    dropRow
+  );
 
-  const isWhitePawnMove = draggedData.color === COLOR.WHITE;
-  const isBlackPawnMove = draggedData.color === COLOR.BLACK;
+  // Validate standard forward move
+  const isStandardMoveValid = isMovingForward && isSameColumn;
 
-  const isWhitePawnMoveValid =
-    isWhitePawnMove && dropRow === draggedRow + 1 && isSameColumn;
-  const isBlackPawnMoveValid =
-    isBlackPawnMove && dropRow === draggedRow - 1 && isSameColumn;
+  // Validate diagonal capture
+  const isDiagonalMoveValid = canPawnCaptureDiagonally({
+    draggedData,
+    onDropPayload,
+    boardState,
+  });
 
-  if (isWhitePawnMoveValid || isBlackPawnMoveValid) {
-    return true;
-  }
-
-  return false;
+  return isStandardMoveValid || isDiagonalMoveValid;
 };
 
 const isBishopMoveBlocked = ({
@@ -218,6 +221,56 @@ const isBishopMoveBlocked = ({
   }
 
   return false;
+};
+
+const isPawnColor = (pawnColor: string, color: string) => pawnColor === color;
+
+const isPawnMovingForward = (
+  pawnColor: string,
+  draggedRow: number,
+  dropRow: number
+) => {
+  if (isPawnColor(pawnColor, COLOR.WHITE)) {
+    return dropRow === draggedRow + 1;
+  }
+  if (isPawnColor(pawnColor, COLOR.BLACK)) {
+    return dropRow === draggedRow - 1;
+  }
+  return false;
+};
+
+const isPieceOnSquare = ({
+  rowId,
+  columnId,
+  boardState,
+}: IDetailsForOnDrop) => {
+  return boardState.some(
+    (piece) => piece.row === rowId && piece.column === columnId
+  );
+}
+
+const canPawnCaptureDiagonally = ({
+  draggedData,
+  onDropPayload,
+  boardState,
+}: IHandlePieceDrop) => {
+  const { row: draggedRow, column: draggedColumn } = draggedData;
+  const { row: dropRow, column: dropColumn } = onDropPayload;
+
+  // Validate pawn direction
+  if (!isPawnMovingForward(draggedData.color, draggedRow, dropRow)) {
+    return false;
+  }
+
+  // Check diagonal capture
+  const isDiagonalMove = Math.abs(draggedColumn - dropColumn) === 1;
+  const isTargetOccupied = isPieceOnSquare({
+    rowId: dropRow,
+    columnId: dropColumn,
+    boardState,
+  });
+
+  return isDiagonalMove && isTargetOccupied;
 };
 
 const isRookMoveValid = ({
