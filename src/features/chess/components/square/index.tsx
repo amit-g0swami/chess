@@ -27,6 +27,7 @@ export const Square = ({
     piece: IBoardState
   ) => {
     const draggedPayload: IBoardState = {
+      id: piece.id,
       row: piece.row,
       column: piece.column,
       color: piece.color,

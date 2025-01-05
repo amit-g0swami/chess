@@ -25,6 +25,7 @@ export interface IBoardState {
   color: COLOR;
   row: number;
   column: number;
+  id: number;
 }
 
 export interface IDetailsForOnDrop {

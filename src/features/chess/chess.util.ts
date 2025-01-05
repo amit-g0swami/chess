@@ -1,3 +1,4 @@
+import { INITIAL_BOARD_STATE } from "./chess.const";
 import {
   COLOR,
   IBoardState,
@@ -9,17 +10,30 @@ import {
   ValidateMoveProps,
 } from "./chess.interface";
 
-const capturedPieces = (boardState: IBoardState[]) => {
-  const capturedBlackPieces = [];
-  const totalCapturedBlackPieces = capturedBlackPieces.length;
-  const capturedWhitePieces = [];
-  const totalCapturedWhitePieces = capturedWhitePieces.length;
+const capturedPieces = (
+  boardState: IBoardState[]
+): {
+  capturedBlackPieces: IBoardState[];
+  capturedWhitePieces: IBoardState[];
+} => {
+  if (boardState.length === INITIAL_BOARD_STATE.length) {
+    return { capturedBlackPieces: [], capturedWhitePieces: [] };
+  }
+
+  const capturedPieces = INITIAL_BOARD_STATE.filter(
+    (initialPiece) => !boardState.some((piece) => piece.id === initialPiece.id)
+  );
+
+  const capturedWhitePieces = capturedPieces.filter(
+    (piece) => piece.color === COLOR.WHITE
+  );
+  const capturedBlackPieces = capturedPieces.filter(
+    (piece) => piece.color === COLOR.BLACK
+  );
 
   return {
-    totalCapturedBlackPieces,
-    capturedBlackPieces,
-    totalCapturedWhitePieces,
     capturedWhitePieces,
+    capturedBlackPieces,
   };
 };
 
@@ -137,8 +151,8 @@ const isDroppedSquareTypeSameAsDraggedSquare = ({
   draggedData,
   onDropPayload,
 }: ValidateMoveProps) => {
-  const { type: draggedPieceType } = draggedData;
-  const { pieceType: droppedPieceType } = onDropPayload;
+  const { color: draggedPieceType } = draggedData;
+  const { color: droppedPieceType } = onDropPayload;
   const isSamePieceType = draggedPieceType === droppedPieceType;
   return isSamePieceType;
 };
