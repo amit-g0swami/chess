@@ -320,7 +320,6 @@ const isRookMoveBlocked = ({
 
   if (isSameRow) {
     const columnStep = draggedColumn < dropColumn ? 1 : -1;
-
     let currentColumn = draggedColumn + columnStep;
 
     while (currentColumn !== dropColumn) {
@@ -338,7 +337,6 @@ const isRookMoveBlocked = ({
 
   if (isSameColumn) {
     const rowStep = draggedRow < dropRow ? 1 : -1;
-
     let currentRow = draggedRow + rowStep;
 
     while (currentRow !== dropRow) {
