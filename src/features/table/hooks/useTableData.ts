@@ -1,60 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addData, incrementPage } from "../../store/tableSlice";
+import {
+  selectTableData,
+  selectPage,
+  selectHasMore,
+  selectFetchedPages,
+} from "../../store/selectors";
 
 export const useTableData = (tableId: string) => {
-  const [data, setData] = useState<Record<string, unknown[]>>({});
-  const [page, setPage] = useState<Record<string, number>>({});
-  const [hasMore, setHasMore] = useState<Record<string, boolean>>({});
-  const fetchedPages = new Set<number>(); // Keeps track of already fetched pages
+  const dispatch = useDispatch();
+
+  const data = useSelector((state) => selectTableData(state, tableId));
+  const page = useSelector((state) => selectPage(state, tableId));
+  const hasMore = useSelector((state) => selectHasMore(state, tableId));
+  const fetchedPages = useSelector((state) =>
+    selectFetchedPages(state, tableId)
+  );
+
+  // Memoize fetchedPagesSet to avoid unnecessary recomputation
+  const fetchedPagesSet = useMemo(() => new Set(fetchedPages), [fetchedPages]);
 
   useEffect(() => {
-    const currentPage = page[tableId] || 1;
-    
-    // Prevent fetching if data for this page is already available
-    if (fetchedPages.has(currentPage)) return;
-    
-    fetchedPages.add(currentPage); // Mark page as fetched
+    if (fetchedPagesSet.has(page)) return; // Prevent duplicate fetch
 
     const fetchData = async () => {
-      // Simulated delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulated delay
 
-      // Dummy data for testing
       const newData = Array.from({ length: 10 }, (_, index) => ({
-        id: currentPage * 10 + index,
-        name: `Item ${currentPage * 10 + index}`,
+        id: page * 10 + index,
+        name: `Item ${page * 10 + index}`,
         price: (Math.random() * 100).toFixed(2),
         category: ["Electronics", "Clothing", "Books", "Home"][index % 4],
       }));
 
-      setData((prev) => ({
-        ...prev,
-        [tableId]: [...(prev[tableId] || []), ...newData],
-      }));
-
-      setHasMore((prev) => ({
-        ...prev,
-        [tableId]: newData.length > 0, // Simulating infinite data
-      }));
+      dispatch(addData({ tableId, newData, page }));
     };
 
     fetchData();
-  }, [page, tableId]);
+  }, [page, tableId, fetchedPagesSet, dispatch]);
 
   const fetchMore = () => {
-    const nextPage = (page[tableId] || 1) + 1;
-
-    // Prevent fetching if data for this page is already available
-    if (fetchedPages.has(nextPage)) return;
-
-    setPage((prev) => ({
-      ...prev,
-      [tableId]: nextPage,
-    }));
+    if (fetchedPagesSet.has(page + 1)) return; // Prevent duplicate fetch
+    dispatch(incrementPage(tableId));
   };
 
-  return {
-    data: data[tableId] || [],
-    hasMore: hasMore[tableId] ?? true,
-    fetchMore,
-  };
+  return { data, hasMore, fetchMore };
 };

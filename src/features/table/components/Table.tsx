@@ -1,15 +1,14 @@
 import React, { ReactNode } from "react";
-import "./index.css"; // Import CSS file
+import "./index.css";
 
 interface TableProps {
   data: Record<string, ReactNode>[];
 }
 
-const Table: React.FC<TableProps> = ({ data }) => {
+const Table: React.FC<TableProps> = React.memo(({ data }) => {
   return (
     <div className="table-container">
       <table className="table">
-        {/* Table Header */}
         <thead>
           <tr>
             {data.length > 0 &&
@@ -18,8 +17,6 @@ const Table: React.FC<TableProps> = ({ data }) => {
               ))}
           </tr>
         </thead>
-
-        {/* Table Body */}
         <tbody>
           {data.map((row, rowIndex) => (
             <tr key={rowIndex}>
@@ -30,11 +27,9 @@ const Table: React.FC<TableProps> = ({ data }) => {
           ))}
         </tbody>
       </table>
-
-      {/* Loader Placeholder */}
       {data.length === 0 && <div className="no-data">No Data Available</div>}
     </div>
   );
-};
+});
 
 export default Table;
