@@ -43,7 +43,7 @@ export const useTableData = (tableId: string) => {
 
   return {
     data: data[tableId] || [],
-    fetchMore,
     hasMore: hasMore[tableId] ?? true,
+    fetchMore,
   };
 };

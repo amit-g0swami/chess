@@ -2,14 +2,14 @@ import { useRef, useCallback } from "react";
 
 interface TableWrapperProps {
   children: React.ReactNode;
-  loadMore: () => void;
   hasMore: boolean;
+  loadMore: () => void;
 }
 
 const TableWrapper: React.FC<TableWrapperProps> = ({
   children,
-  loadMore,
   hasMore,
+  loadMore,
 }) => {
   const observer = useRef<IntersectionObserver | null>(null);
   const lastRowRef = useCallback(
