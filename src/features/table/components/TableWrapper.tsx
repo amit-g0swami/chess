@@ -20,7 +20,7 @@ const TableWrapper: React.FC<TableWrapperProps> = ({
     if (isVisible && hasMore) {
       loadMore();
     }
-  }, [isVisible]);
+  }, [isVisible, hasMore]);
 
   return (
     <div className="table-wrapper">

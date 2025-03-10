@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addData, incrementPage } from "../../store/tableSlice";
 import {
@@ -10,6 +10,7 @@ import {
 
 export const useTableData = (tableId: string) => {
   const dispatch = useDispatch();
+  const hasMounted = useRef(false); // Track if component has mounted
 
   const data = useSelector((state) => selectTableData(state, tableId));
   const page = useSelector((state) => selectPage(state, tableId));
@@ -17,7 +18,6 @@ export const useTableData = (tableId: string) => {
   const fetchedPages = useSelector((state) =>
     selectFetchedPages(state, tableId)
   );
-
   // Memoize fetchedPagesSet to avoid unnecessary recomputation
   const fetchedPagesSet = useMemo(() => new Set(fetchedPages), [fetchedPages]);
 
@@ -38,9 +38,14 @@ export const useTableData = (tableId: string) => {
     };
 
     fetchData();
-  }, [page, tableId, fetchedPagesSet, dispatch]);
+  }, [page, fetchedPagesSet, tableId, dispatch]);
 
   const fetchMore = () => {
+    if (!hasMounted.current) {
+      hasMounted.current = true; // Mark that the first render has happened
+      return; // Prevent fetchMore from being called initially
+    }
+
     if (fetchedPagesSet.has(page + 1)) return; // Prevent duplicate fetch
     dispatch(incrementPage(tableId));
   };
