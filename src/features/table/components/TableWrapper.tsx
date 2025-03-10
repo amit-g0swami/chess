@@ -1,4 +1,6 @@
-import { useRef, useCallback } from "react";
+import React, { useRef } from "react";
+import useInView from "../hooks/useInView"; // Import the custom hook
+import "./index.css"; // Import CSS file
 
 interface TableWrapperProps {
   children: React.ReactNode;
@@ -11,30 +13,19 @@ const TableWrapper: React.FC<TableWrapperProps> = ({
   hasMore,
   loadMore,
 }) => {
-  const observer = useRef<IntersectionObserver | null>(null);
-  const lastRowRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node || !hasMore) return;
+  const lastRowRef = useRef<HTMLDivElement | null>(null);
+  const isVisible = useInView(lastRowRef);
 
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            loadMore();
-          }
-        },
-        { threshold: 1.0 }
-      );
-
-      observer.current.observe(node);
-    },
-    [loadMore, hasMore]
-  );
+  React.useEffect(() => {
+    if (isVisible && hasMore) {
+      loadMore();
+    }
+  }, [isVisible]);
 
   return (
-    <div className="overflow-auto h-[500px]">
+    <div className="table-wrapper">
       {children}
-      {hasMore && <div ref={lastRowRef} className="h-10" />}
+      {hasMore && <div ref={lastRowRef} className="loader-placeholder" />}
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { store } from "./features/store";
 function App() {
   return (
     <Provider store={store}>
-      <TableComponent />;
+      <TableComponent />
     </Provider>
   );
 }

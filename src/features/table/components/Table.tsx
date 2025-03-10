@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import "./index.css"; // Import CSS file
 
 interface TableProps {
   data: Record<string, ReactNode>[];
@@ -6,16 +7,14 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ data }) => {
   return (
-    <div className="w-full border rounded-lg overflow-hidden">
-      <table className="w-full border-collapse">
+    <div className="table-container">
+      <table className="table">
         {/* Table Header */}
-        <thead className="bg-gray-200">
+        <thead>
           <tr>
             {data.length > 0 &&
               Object.keys(data[0]).map((key) => (
-                <th key={key} className="p-3 text-left border">
-                  {key.toUpperCase()}
-                </th>
+                <th key={key}>{key.toUpperCase()}</th>
               ))}
           </tr>
         </thead>
@@ -23,11 +22,9 @@ const Table: React.FC<TableProps> = ({ data }) => {
         {/* Table Body */}
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="border-b even:bg-gray-50">
+            <tr key={rowIndex}>
               {Object.values(row).map((value, colIndex) => (
-                <td key={colIndex} className="p-3 border">
-                  {value}
-                </td>
+                <td key={colIndex}>{value}</td>
               ))}
             </tr>
           ))}
@@ -35,9 +32,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
       </table>
 
       {/* Loader Placeholder */}
-      {data.length === 0 && (
-        <div className="p-4 text-center text-gray-500">No Data Available</div>
-      )}
+      {data.length === 0 && <div className="no-data">No Data Available</div>}
     </div>
   );
 };

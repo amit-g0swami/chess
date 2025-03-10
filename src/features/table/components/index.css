@@ -1,0 +1,49 @@
+/* Table.css */
+.table-container {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #e5e7eb;
+    /* Equivalent to bg-gray-200 */
+}
+
+.table th,
+.table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+    /* Equivalent to even:bg-gray-50 */
+}
+
+.no-data {
+    padding: 16px;
+    text-align: center;
+    color: #6b7280;
+    /* Equivalent to text-gray-500 */
+}
+
+/* TableWrapper.css */
+
+.table-wrapper {
+    overflow: auto;
+    height: 24rem;
+    /* Equivalent to height: "24rem" */
+}
+
+.loader-placeholder {
+    height: 2.5rem;
+    /* Equivalent to height: "2.5rem" */
+}
