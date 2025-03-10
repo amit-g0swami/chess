@@ -22,3 +22,8 @@ export const selectFetchedPages = createSelector(
   [selectTableState, (_, tableId: string) => tableId],
   (table, tableId) => table.fetchedPages[tableId] || []
 );
+
+export const selectScrollPosition = createSelector(
+  [selectTableState, (_, tableId: string) => tableId],
+  (table, tableId) => table.scrollPosition[tableId] || 0
+);

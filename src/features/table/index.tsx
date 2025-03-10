@@ -11,7 +11,7 @@ export const TableComponent = () => {
   const memoizedData = useMemo(() => data, [data]);
 
   return (
-    <TableWrapper loadMore={fetchMore} hasMore={hasMore}>
+    <TableWrapper tableId={tableId} hasMore={hasMore} loadMore={fetchMore}>
       <Table data={memoizedData as Record<string, ReactNode>[]} />
     </TableWrapper>
   );
